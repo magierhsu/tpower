@@ -1,7 +1,6 @@
 import requests
 import json
 import os
-import time
 from datetime import datetime
 from threading import Timer
 
@@ -37,8 +36,19 @@ def load_local_db(db_filename):
     try:
         if os.path.exists(db_filename):
             with open(db_filename, 'r', encoding='utf-8') as file:
-                db = json.load(file)
-                timestamps = {record[""] for record in db}
+                loaded_data = json.load(file)
+                unique_data = []
+                seen_timestamps = set()
+                for record in loaded_data:
+                    record_timestamp = record[""]
+                    if record_timestamp not in seen_timestamps:
+                        seen_timestamps.add(record_timestamp)
+                        unique_data.append(record)
+                # Sort the unique data by timestamp
+                unique_data.sort(key=lambda x: datetime.strptime(x[""], '%Y-%m-%d %H:%M'))
+                db = unique_data
+                timestamps = seen_timestamps
+                print("len db:" + str(len(db)))
         else:
             db = []
             timestamps = set()
