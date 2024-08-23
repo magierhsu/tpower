@@ -104,8 +104,8 @@ def fetch_and_update():
     except Exception as e:
         print(f"Error: {e}")
     finally:
-        # Schedule the function to run again after 5 minutes
-        Timer(300, fetch_and_update).start()
+        # Schedule the function to run again after 1 minutes
+        Timer(60, fetch_and_update).start()
 
 if __name__ == '__main__':
     # Initialize the database with the current month's data
