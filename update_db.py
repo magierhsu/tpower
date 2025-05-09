@@ -28,7 +28,7 @@ def download_json(url):
         return None
 
 def get_db_filename(timestamp):
-    date = datetime.strptime(timestamp, '%Y-%m-%d %H:%M')
+    date = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S')
     return os.path.join(db_dir, f'db_{date.strftime("%Y%m")}.json')
 
 def load_local_db(db_filename):
@@ -40,12 +40,12 @@ def load_local_db(db_filename):
                 unique_data = []
                 seen_timestamps = set()
                 for record in loaded_data:
-                    record_timestamp = record[""]
+                    record_timestamp = record["DateTime"]
                     if record_timestamp not in seen_timestamps:
                         seen_timestamps.add(record_timestamp)
                         unique_data.append(record)
                 # Sort the unique data by timestamp
-                unique_data.sort(key=lambda x: datetime.strptime(x[""], '%Y-%m-%d %H:%M'))
+                unique_data.sort(key=lambda x: datetime.strptime(x["DateTime"], '%Y-%m-%dT%H:%M:%S'))
                 db = unique_data
                 timestamps = seen_timestamps
                 print("len db:" + str(len(db)))
@@ -67,7 +67,7 @@ def save_local_db(db_filename):
 
 def update_db(new_data):
     global db, timestamps
-    new_timestamp = new_data[""]
+    new_timestamp = new_data["DateTime"]
     if new_timestamp in timestamps:
         return False  # Duplicate found, no update needed
     db.append(new_data)
@@ -83,7 +83,7 @@ def fetch_and_update():
             return  # Skip this cycle if download failed
 
         # Determine the appropriate database file based on the timestamp
-        new_timestamp = new_data[""]
+        new_timestamp = new_data["DateTime"]
         db_filename = get_db_filename(new_timestamp)
 
         # Check if we need to switch to a new month's file
@@ -109,7 +109,7 @@ def fetch_and_update():
 
 if __name__ == '__main__':
     # Initialize the database with the current month's data
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M')
+    current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
     current_month = get_db_filename(current_time)
     load_local_db(current_month)
 
