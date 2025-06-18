@@ -44,7 +44,8 @@ export function renderSummary(summaryData) {
 
 export function calculateTimePointStatistics(dataPoint) {
     const aggregatedData = new Map(); // 用於按機組類型匯總數據
-    const allDetails = []; // 用於儲存所有詳細機組數據，包括「小計」
+    let grandTotalCapacity = 0;
+    let grandTotalNetGeneration = 0;
 
     // 輔助函數：從字串中提取數值 (例如 "951.0(1.654%)" -> 951.0)
     const extractNumericValue = (str) => {
@@ -63,14 +64,7 @@ export function calculateTimePointStatistics(dataPoint) {
         const remark = item['備註'];
 
         // 將所有詳細數據加入 allDetails，包括「小計」行
-        allDetails.push({
-            '機組類型': type,
-            '機組名稱': name,
-            '裝置容量(MW)': capacity,
-            '淨發電量(MW)': netGeneration,
-            '淨發電量/裝置容量比(%)': generationRatio,
-            '備註': remark
-        });
+        // 這裡我們不再需要 allDetails 陣列，因為 details 會直接儲存在 aggregatedData 中
 
         // 排除「小計」行，因為我們將自行計算總和
         if (name === '小計') {
@@ -99,6 +93,10 @@ export function calculateTimePointStatistics(dataPoint) {
             '淨發電量/裝置容量比(%)': generationRatio,
             '備註': remark
         });
+
+        // 計算總計
+        grandTotalCapacity += capacity;
+        grandTotalNetGeneration += netGeneration;
     });
 
     const statistics = Array.from(aggregatedData.values());
@@ -114,14 +112,26 @@ export function calculateTimePointStatistics(dataPoint) {
         item['淨發電量(MW)'] = item['淨發電量(MW)'].toFixed(2);
     });
 
-    return statistics; // 返回匯總數據，每個匯總數據包含其詳細數據
+    // 添加總計行
+    const grandTotal = {
+        '機組類型': '總計',
+        '機組名稱': '所有機組總計',
+        '裝置容量(MW)': grandTotalCapacity.toFixed(2),
+        '淨發電量(MW)': grandTotalNetGeneration.toFixed(2),
+        '淨發電量/裝置容量比(%)': grandTotalCapacity > 0 ? (grandTotalNetGeneration / grandTotalCapacity * 100).toFixed(2) : '0.00',
+        '備註': ''
+    };
+
+    return { typeAggregations: statistics, grandTotal: grandTotal };
 }
 
-export function renderTimePointTable(statistics) {
+export function renderTimePointTable(data) {
     const tableBody = document.querySelector('#timePointTable tbody');
     tableBody.innerHTML = ''; // 清空現有內容
 
-    if (statistics.length === 0) {
+    const { typeAggregations, grandTotal } = data;
+
+    if (typeAggregations.length === 0 && !grandTotal) {
         const row = tableBody.insertRow();
         const cell = row.insertCell();
         cell.colSpan = 6; // 跨越所有列
@@ -130,7 +140,7 @@ export function renderTimePointTable(statistics) {
         return;
     }
 
-    statistics.forEach(item => {
+    typeAggregations.forEach(item => {
         // 渲染總計行
         const totalRow = tableBody.insertRow();
         totalRow.classList.add('total-row'); // 添加樣式類別
@@ -151,6 +161,45 @@ export function renderTimePointTable(statistics) {
             detailRow.insertCell().textContent = detail['淨發電量(MW)'].toFixed(2) + ' MW';
             detailRow.insertCell().textContent = detail['淨發電量/裝置容量比(%)'].toFixed(2) + '%';
             detailRow.insertCell().textContent = detail['備註'];
+        });
+    });
+
+    // 渲染所有機組的總計行
+    if (grandTotal) {
+        const grandTotalRow = tableBody.insertRow();
+        grandTotalRow.classList.add('grand-total-row'); // 添加樣式類別
+        grandTotalRow.insertCell().textContent = grandTotal['機組類型'];
+        grandTotalRow.insertCell().textContent = grandTotal['機組名稱'];
+        grandTotalRow.insertCell().textContent = grandTotal['裝置容量(MW)'] + ' MW';
+        grandTotalRow.insertCell().textContent = grandTotal['淨發電量(MW)'] + ' MW';
+        grandTotalRow.insertCell().textContent = grandTotal['淨發電量/裝置容量比(%)'] + '%';
+        grandTotalRow.insertCell().textContent = grandTotal['備註'];
+    }
+}
+
+export function renderTimeSeriesTable(data, fuelTypes) {
+    const tableBody = document.querySelector('#timeSeriesTable tbody');
+    tableBody.innerHTML = ''; // 清空現有內容
+
+    if (data.length === 0) {
+        const row = tableBody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = fuelTypes.length + 1; // 時間列 + 燃料類型列
+        cell.textContent = '無資料可顯示。';
+        cell.style.textAlign = 'center';
+        return;
+    }
+
+    data.forEach(row => {
+        const tr = tableBody.insertRow();
+        const timeCell = tr.insertCell();
+        // 格式化時間顯示
+        const date = new Date(row.Time);
+        timeCell.textContent = date.toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+        fuelTypes.forEach(type => {
+            const cell = tr.insertCell();
+            cell.textContent = (row[type] || 0).toFixed(2); // 確保數值為數字並格式化
         });
     });
 }

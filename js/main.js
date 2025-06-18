@@ -77,6 +77,9 @@ async function updateDashboard() {
     const timeSeriesChartData = chartRenderer.prepareTimeSeriesChartData(filteredData, fuelTypes, fuelColors);
     timeSeriesChartInstance = chartRenderer.renderTimeSeriesChart(timeSeriesChartData, 'timeSeriesChart', timeSeriesChartInstance);
 
+    // 輸出時間序列數據為表格
+    dataSummary.renderTimeSeriesTable(filteredData, fuelTypes);
+
     // 繪製發電來源佔比圓餅圖
     const sourceDistributionChartData = chartRenderer.prepareSourceDistributionChartData(summary, fuelColors);
     sourceDistributionChartInstance = chartRenderer.renderPieChart(sourceDistributionChartData, 'sourceDistributionChart', sourceDistributionChartInstance);
@@ -102,18 +105,21 @@ async function handleTimePointFilter() {
         }
 
         // 尋找最接近選定時間點的數據
-        const targetTimestamp = selectedDate.toISOString().slice(0, 16); // 格式化為 YYYY-MM-DDTHH:MM
-        // 尋找最接近選定時間點的數據
-        // JSON 數據的 DateTime 格式為 YYYY-MM-DDTHH:MM:SS
-        // selectedTimePoint 格式為 YYYY-MM-DDTHH:MM
-        // 尋找最接近選定時間點的數據
-        // JSON 數據的 DateTime 格式為 YYYY-MM-DDTHH:MM:SS
-        // selectedTimePoint 格式為 YYYY-MM-DDTHH:MM
-        const dataPoint = jsonData.find(d => d.DateTime.startsWith(targetTimestamp));
+        // 確保 selectedDate 是基於本地時間的，並格式化為 YYYY-MM-DDTHH:MM:SS
+        const year = selectedDate.getFullYear();
+        const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = selectedDate.getDate().toString().padStart(2, '0');
+        const hours = selectedDate.getHours().toString().padStart(2, '0');
+        const minutes = selectedDate.getMinutes().toString().padStart(2, '0');
+        const seconds = selectedDate.getSeconds().toString().padStart(2, '0'); // JSON 數據包含秒數
+
+        const targetTimestamp = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+
+        const dataPoint = jsonData.find(d => d.DateTime === targetTimestamp);
 
         if (dataPoint && dataPoint.aaData && dataPoint.aaData.length > 0) {
-            const statistics = dataSummary.calculateTimePointStatistics(dataPoint);
-            dataSummary.renderTimePointTable(statistics);
+            const result = dataSummary.calculateTimePointStatistics(dataPoint);
+            dataSummary.renderTimePointTable(result);
             document.getElementById('time-point-table-display').style.display = 'block';
         } else {
             alert(`在 ${yearMonth} 的資料中找不到 ${selectedTimePoint} 的數據點或該時間點無詳細機組資料。`);

@@ -128,6 +128,44 @@ button:hover {
     text-align: left;
 }
 
+/* 時間序列表格容器樣式 */
+#time-series-table-display .table-container {
+    max-height: 400px; /* 設定最大高度 */
+    overflow-y: auto; /* 垂直滾動 */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#time-series-table-display table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0; /* 移除預設的 margin-top */
+}
+
+#time-series-table-display th,
+#time-series-table-display td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: right; /* 數值靠右對齊 */
+    white-space: nowrap; /* 防止內容換行 */
+}
+
+#time-series-table-display th {
+    background-color: #007bff;
+    color: white;
+    position: sticky; /* 使表頭在滾動時固定 */
+    top: 0;
+    z-index: 1;
+}
+
+#time-series-table-display tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#time-series-table-display tbody tr:hover {
+    background-color: #ddd;
+}
+
 #time-point-table-display th {
     background-color: #007bff;
     color: white;
@@ -156,6 +194,13 @@ button:hover {
 
 #time-point-table-display .detail-row td:first-child {
     padding-left: 30px; /* 確保第一列有足夠的縮進 */
+}
+
+/* 所有機組總計行樣式 */
+#time-point-table-display .grand-total-row {
+    font-weight: bold;
+    background-color: #cceeff; /* 淺藍色背景 */
+    border-top: 2px solid #007bff; /* 頂部加粗邊框 */
 }
 
 /* 頁腳樣式 */
