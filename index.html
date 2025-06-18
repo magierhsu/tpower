@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>發電量分析儀表板</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>台灣發電量分析儀表板</h1>
+    </header>
+
+    <main>
+        <section id="controls">
+            <h2>資料篩選</h2>
+            <div class="date-picker-container">
+                <label for="startDate">開始日期:</label>
+                <input type="date" id="startDate">
+                <label for="endDate">結束日期:</label>
+                <input type="date" id="endDate">
+                <button id="applyFilter">應用篩選</button>
+            </div>
+            <div class="data-source-toggle">
+                <!-- 如果需要切換資料來源，可以在這裡添加選項 -->
+                <!-- <label><input type="checkbox" id="showJsonData"> 顯示即時資料</label> -->
+            </div>
+            <div class="time-point-selector">
+                <h3>選擇時間點 (每10分鐘)</h3>
+                <input type="datetime-local" id="timePointSelector">
+                <button id="applyTimePointFilter">顯示該時段機組統計</button>
+            </div>
+        </section>
+
+        <section id="summary-display">
+            <h2>資料摘要</h2>
+            <div class="summary-cards">
+                <div class="card">
+                    <h3>總發電量 (MW)</h3>
+                    <p id="totalGeneration">--</p>
+                </div>
+                <div class="card">
+                    <h3>再生能源佔比</h3>
+                    <p id="renewablePercentage">--</p>
+                </div>
+                <div class="card">
+                    <h3>核能發電量 (MW)</h3>
+                    <p id="nuclearGeneration">--</p>
+                </div>
+                <div class="card">
+                    <h3>燃煤發電量 (MW)</h3>
+                    <p id="coalGeneration">--</p>
+                </div>
+                <div class="card">
+                    <h3>燃氣發電量 (MW)</h3>
+                    <p id="gasGeneration">--</p>
+                </div>
+                <!-- 可以根據需要增加更多發電來源的摘要 -->
+            </div>
+        </section>
+
+        <section id="time-point-table-display" style="display:none;">
+            <h2>單一時間點機組發電統計</h2>
+            <table id="timePointTable">
+                <thead>
+                    <tr>
+                        <th>機組類型</th>
+                        <th>機組名稱</th>
+                        <th>裝置容量(MW)</th>
+                        <th>淨發電量(MW)</th>
+                        <th>淨發電量/裝置容量比(%)</th>
+                        <th>備註</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 資料將由 JavaScript 動態載入 -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="chart-display">
+            <h2>發電量趨勢</h2>
+            <div class="chart-container">
+                <canvas id="timeSeriesChart"></canvas>
+            </div>
+            <h2>發電來源佔比</h2>
+            <div class="chart-container pie-chart-container">
+                <canvas id="sourceDistributionChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 台灣發電量分析儀表板</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+/* 通用樣式 */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* 控制區塊樣式 */
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.date-picker-container, .time-point-selector {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-picker-container label, .time-point-selector label {
+    font-weight: bold;
+}
+
+input[type="date"],
+input[type="datetime-local"],
+button {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* 資料摘要樣式 */
+#summary-display .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.summary-cards .card {
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.summary-cards .card h3 {
+    margin-top: 0;
+    color: #0056b3;
+}
+
+.summary-cards .card p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+/* 圖表顯示樣式 */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px; /* 預設高度 */
+    margin-bottom: 20px;
+}
+
+.pie-chart-container {
+    max-width: 500px; /* 圓餅圖可以小一點 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 時間點表格樣式 */
+#time-point-table-display table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#time-point-table-display th,
+#time-point-table-display td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#time-point-table-display th {
+    background-color: #007bff;
+    color: white;
+}
+
+#time-point-table-display tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#time-point-table-display tbody tr:hover {
+    background-color: #ddd;
+}
+
+/* 總計行樣式 */
+#time-point-table-display .total-row {
+    font-weight: bold;
+    background-color: #e0e0e0;
+}
+
+/* 詳細行樣式 */
+#time-point-table-display .detail-row {
+    padding-left: 20px; /* 縮進效果 */
+    font-size: 0.9em;
+    color: #555;
+}
+
+#time-point-table-display .detail-row td:first-child {
+    padding-left: 30px; /* 確保第一列有足夠的縮進 */
+}
+
+/* 頁腳樣式 */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #333;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    main {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    #summary-display .summary-cards {
+        grid-template-columns: 1fr; /* 在小螢幕上單列顯示 */
+    }
+
+    .chart-container {
+        height: 300px; /* 小螢幕調整圖表高度 */
+    }
+}
