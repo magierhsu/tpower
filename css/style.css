@@ -130,7 +130,7 @@ button:hover {
 
 /* 時間序列表格容器樣式 */
 #time-series-table-display .table-container {
-    max-height: 400px; /* 設定最大高度 */
+    max-height: 800px; /* 設定最大高度 */
     overflow-y: auto; /* 垂直滾動 */
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -140,6 +140,7 @@ button:hover {
     width: 100%;
     border-collapse: collapse;
     margin-top: 0; /* 移除預設的 margin-top */
+    table-layout: fixed; /* 固定表格佈局 */
 }
 
 #time-series-table-display th,
@@ -147,7 +148,7 @@ button:hover {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: right; /* 數值靠右對齊 */
-    white-space: nowrap; /* 防止內容換行 */
+    word-wrap: break-word; /* 允許長單詞換行 */
 }
 
 #time-series-table-display th {

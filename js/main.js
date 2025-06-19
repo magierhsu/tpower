@@ -120,6 +120,7 @@ async function handleTimePointFilter() {
         if (dataPoint && dataPoint.aaData && dataPoint.aaData.length > 0) {
             const result = dataSummary.calculateTimePointStatistics(dataPoint);
             dataSummary.renderTimePointTable(result);
+            document.getElementById('timePointDisplay').textContent = `(${selectedTimePoint})`; // 顯示選定的時間點
             document.getElementById('time-point-table-display').style.display = 'block';
         } else {
             alert(`在 ${yearMonth} 的資料中找不到 ${selectedTimePoint} 的數據點或該時間點無詳細機組資料。`);
