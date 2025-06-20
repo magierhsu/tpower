@@ -184,7 +184,7 @@ export function renderTimeSeriesTable(data, fuelTypes) {
     if (data.length === 0) {
         const row = tableBody.insertRow();
         const cell = row.insertCell();
-        cell.colSpan = fuelTypes.length + 1; // 時間列 + 燃料類型列
+        cell.colSpan = fuelTypes.length + 2; // 時間列 + 燃料類型列 + 總計列
         cell.textContent = '無資料可顯示。';
         cell.style.textAlign = 'center';
         return;
@@ -197,9 +197,16 @@ export function renderTimeSeriesTable(data, fuelTypes) {
         const date = new Date(row.Time);
         timeCell.textContent = date.toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
 
+        let rowTotalGeneration = 0;
         fuelTypes.forEach(type => {
+            const value = row[type] || 0;
+            rowTotalGeneration += value;
             const cell = tr.insertCell();
-            cell.textContent = (row[type] || 0).toFixed(2); // 確保數值為數字並格式化
+            cell.textContent = value.toFixed(0); // 確保數值為數字並格式化
         });
+
+        // 添加總計列
+        const totalCell = tr.insertCell();
+        totalCell.textContent = rowTotalGeneration.toFixed(0);
     });
 }
