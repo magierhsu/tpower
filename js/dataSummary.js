@@ -22,24 +22,58 @@ export function calculateSummary(data, fuelTypes) {
         totalGeneration += rowTotal;
     });
 
-    const renewablePercentage = totalGeneration > 0 ? (renewableGeneration / totalGeneration * 100).toFixed(2) : 0;
+    const renewablePercentage = totalGeneration > 0 ? (renewableGeneration / totalGeneration * 100).toFixed(2) : '0.00';
+
+    const hydroGeneration = fuelTypeTotals['水力'] || 0;
+    const windGeneration = fuelTypeTotals['風力'] || 0;
+    const solarGeneration = fuelTypeTotals['太陽能'] || 0;
+    const otherRenewableGeneration = fuelTypeTotals['其它再生'] || 0;
+
+    const hydroPercentage = totalGeneration > 0 ? (hydroGeneration / totalGeneration * 100).toFixed(2) : '0.00';
+    const windPercentage = totalGeneration > 0 ? (windGeneration / totalGeneration * 100).toFixed(2) : '0.00';
+    const solarPercentage = totalGeneration > 0 ? (solarGeneration / totalGeneration * 100).toFixed(2) : '0.00';
+    const otherRenewablePercentage = totalGeneration > 0 ? (otherRenewableGeneration / totalGeneration * 100).toFixed(2) : '0.00';
+
+    const getPercentage = (value) => totalGeneration > 0 ? (value / totalGeneration * 100).toFixed(2) : '0.00';
 
     return {
         totalGeneration: totalGeneration.toFixed(2),
-        renewablePercentage: renewablePercentage,
+        // renewablePercentage: renewablePercentage, // 移除此項
         nuclearGeneration: fuelTypeTotals['核能'] ? fuelTypeTotals['核能'].toFixed(2) : '0.00',
+        nuclearPercentage: getPercentage(fuelTypeTotals['核能'] || 0),
         coalGeneration: fuelTypeTotals['燃煤'] ? fuelTypeTotals['燃煤'].toFixed(2) : '0.00',
+        coalPercentage: getPercentage(fuelTypeTotals['燃煤'] || 0),
         gasGeneration: fuelTypeTotals['燃氣'] ? fuelTypeTotals['燃氣'].toFixed(2) : '0.00',
+        gasPercentage: getPercentage(fuelTypeTotals['燃氣'] || 0),
+        hydroGeneration: hydroGeneration.toFixed(2),
+        windGeneration: windGeneration.toFixed(2),
+        solarGeneration: solarGeneration.toFixed(2),
+        otherRenewableGeneration: otherRenewableGeneration.toFixed(2),
+        hydroPercentage: hydroPercentage,
+        windPercentage: windPercentage,
+        solarPercentage: solarPercentage,
+        otherRenewablePercentage: otherRenewablePercentage,
         fuelTypeTotals: fuelTypeTotals // 包含所有燃料類型的總計
     };
 }
 
 export function renderSummary(summaryData) {
     document.getElementById('totalGeneration').textContent = summaryData.totalGeneration + ' MW';
-    document.getElementById('renewablePercentage').textContent = summaryData.renewablePercentage + '%';
-    document.getElementById('nuclearGeneration').textContent = summaryData.nuclearGeneration + ' MW';
-    document.getElementById('coalGeneration').textContent = summaryData.coalGeneration + ' MW';
-    document.getElementById('gasGeneration').textContent = summaryData.gasGeneration + ' MW';
+    // document.getElementById('renewablePercentage').textContent = summaryData.renewablePercentage + '%'; // 移除此項
+    document.getElementById('nuclearGeneration').textContent = `${summaryData.nuclearGeneration} MW (${summaryData.nuclearPercentage}%)`;
+    document.getElementById('coalGeneration').textContent = `${summaryData.coalGeneration} MW (${summaryData.coalPercentage}%)`;
+    document.getElementById('gasGeneration').textContent = `${summaryData.gasGeneration} MW (${summaryData.gasPercentage}%)`;
+
+    // 再生能源細項數據
+    document.getElementById('hydroGeneration').textContent = `${summaryData.hydroGeneration} MW (${summaryData.hydroPercentage}%)`;
+    document.getElementById('windGeneration').textContent = `${summaryData.windGeneration} MW (${summaryData.windPercentage}%)`;
+    document.getElementById('solarGeneration').textContent = `${summaryData.solarGeneration} MW (${summaryData.solarPercentage}%)`;
+    document.getElementById('otherRenewableGeneration').textContent = `${summaryData.otherRenewableGeneration} MW (${summaryData.otherRenewablePercentage}%)`;
+    // 移除個別的百分比顯示，因為已經合併到發電量顯示中
+    // document.getElementById('hydroPercentage').textContent = '';
+    // document.getElementById('windPercentage').textContent = '';
+    // document.getElementById('solarPercentage').textContent = '';
+    // document.getElementById('otherRenewablePercentage').textContent = '';
 }
 
 export function calculateTimePointStatistics(dataPoint) {
