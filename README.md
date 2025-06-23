@@ -26,6 +26,12 @@
 *   **數據來源 URL**:
     *   `https://service.taipower.com.tw/data/opendata/apply/file/d006001/001.json`
 
+### [`index.html`](index.html)
+
+*   **功能**: 這是專案的網頁儀表板介面，用於視覺化展示發電量數據。它包含日期篩選、單一時間點機組統計、總發電量摘要、發電量趨勢圖、發電來源佔比圖以及詳細的時間序列數據表格。
+*   **用途**: 提供使用者一個互動式的介面來瀏覽和分析台灣電力公司的發電量數據。
+*   **相關檔案**: `js/main.js`, `js/dataLoader.js`, `js/dateFilter.js`, `js/dataSummary.js`, `js/chartRenderer.js`, `css/style.css`
+
 ## 協同工作方式
 
-[`collect_data.py`](collect_data.py) 和 [`update_db.py`](update_db.py) 這兩個 Python 腳本獨立運行，但都持續從台灣電力公司獲取數據。[`collect_data.py`](collect_data.py) 負責收集每日的歷史數據，而 [`update_db.py`](update_db.py) 則負責收集更頻繁的即時數據。
+[`collect_data.py`](collect_data.py) 和 [`update_db.py`](update_db.py) 這兩個 Python 腳本獨立運行，但都持續從台灣電力公司獲取數據。[`collect_data.py`](collect_data.py) 負責收集每日的歷史數據，而 [`update_db.py`](update_db.py) 則負責收集更頻繁的即時數據。[`index.html`](index.html) 則透過前端 JavaScript 腳本（例如 `js/dataLoader.js`）載入由這兩個 Python 腳本生成的 `db.csv` 和 `db_files/*.json` 數據，並將其視覺化呈現於儀表板上。
